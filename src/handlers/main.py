@@ -1,9 +1,18 @@
+import logging
+from datetime import datetime
+import json
+
 from aiogram import Router, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
+from src.utils.salaries.payments import aggregate_payments
+from src.database.repositories.salary import salary_db
+
+logger = logging.getLogger(__name__)
 
 router = Router(name="main")
+
 
 @router.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
@@ -13,6 +22,16 @@ async def command_start_handler(message: Message) -> None:
 @router.message()
 async def echo_handler(message: types.Message) -> None:
     try:
-        await message.send_copy(chat_id=message.chat.id)
-    except TypeError:
         await message.answer("Nice try!")
+        message_json = json.loads(message.text)
+        print(message_json)
+        all_salaries = await salary_db.get_all_salaries("user_salaries")
+        dt_from = datetime.fromisoformat(message_json["dt_from"])
+        dt_upto = datetime.fromisoformat(message_json["dt_upto"])
+        print(
+            await aggregate_payments(
+                dt_from, dt_upto, message_json["group_type"], all_salaries
+            )
+        )
+    except Exception as e:
+        logger.error(e)

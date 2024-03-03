@@ -6,12 +6,12 @@ ENV PYTHONUNBUFFERED=1
 
 RUN pip install poetry
 
-WORKDIR /src
-COPY poetry.lock pyproject.toml /src/
+WORKDIR /app
+COPY poetry.lock pyproject.toml /app/
 
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-interaction --no-root
 
 COPY . .
 
-CMD ["python", "src/main.py"]
+CMD ["python", "main.py"]

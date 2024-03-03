@@ -1,9 +1,12 @@
 import logging
-import os
 from abc import ABC, abstractmethod
+
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection as Collection
 
+from src.config import Config
+
 logger = logging.getLogger(__name__)
+
 
 class BaseRepository(ABC):
     @abstractmethod
@@ -60,7 +63,7 @@ class BaseRepository(ABC):
 
 class MongoRepository(BaseRepository):
     def __init__(self):
-        self._database = AsyncIOMotorClient()
+        self._database = AsyncIOMotorClient(Config.MONGO_URL)
         self._current_db = self._database["sample_db"]
 
     async def create_one(self, collection: str, data: dict):

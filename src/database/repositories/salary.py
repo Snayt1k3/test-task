@@ -5,13 +5,15 @@ from src.database.dto.salary import Salary
 
 logger = logging.getLogger(__name__)
 
+
 class SalaryRepository(MongoRepository):
     """
     Репозиторий для операций с зарплатами людей
     """
+
     def __init__(self):
         super().__init__()
-        self._current_db = self._database["user_salaries"]
+        self._current_db = self._database["salaries"]
 
     async def get_all_salaries(self, collection: str) -> list[Salary]:
         try:
@@ -22,5 +24,10 @@ class SalaryRepository(MongoRepository):
 
             return output
         except Exception as e:
-            logger.error(f"Error occurred in salary repositories(get_all_salaries) - {e}")
+            logger.error(
+                f"Error occurred in salary repositories(get_all_salaries) - {e}"
+            )
             return []
+
+
+salary_db = SalaryRepository()
