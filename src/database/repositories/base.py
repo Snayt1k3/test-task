@@ -61,7 +61,7 @@ class BaseRepository(ABC):
 class MongoRepository(BaseRepository):
     def __init__(self):
         self._database = AsyncIOMotorClient()
-        self._current_db = self._database["telegram-shiki-bot"]
+        self._current_db = self._database["sample_db"]
 
     async def create_one(self, collection: str, data: dict):
         try:
@@ -103,7 +103,7 @@ class MongoRepository(BaseRepository):
         except Exception as e:
             logger.error(f"Error occurred in repository(delete_one) - {e}")
 
-    async def find(self, collection):
+    async def find_all(self, collection):
         try:
             collection: Collection = self._current_db[collection]
             return collection.find()
