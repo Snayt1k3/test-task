@@ -1,4 +1,17 @@
-FROM ubuntu:latest
-LABEL authors="macbook"
+FROM python:3.12
 
-ENTRYPOINT ["top", "-b"]
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+
+RUN pip install poetry
+
+WORKDIR /src
+COPY poetry.lock pyproject.toml /src/
+
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-interaction --no-root
+
+COPY . .
+
+CMD ["python", "src/main.py"]
