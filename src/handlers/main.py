@@ -22,16 +22,14 @@ async def command_start_handler(message: Message) -> None:
 @router.message()
 async def echo_handler(message: types.Message) -> None:
     try:
-        await message.answer("Nice try!")
         message_json = json.loads(message.text)
-        print(message_json)
         all_salaries = await salary_db.get_all_salaries("user_salaries")
         dt_from = datetime.fromisoformat(message_json["dt_from"])
         dt_upto = datetime.fromisoformat(message_json["dt_upto"])
-        print(
-            await aggregate_payments(
+        payments = await aggregate_payments(
                 dt_from, dt_upto, message_json["group_type"], all_salaries
             )
-        )
+        await message.answer(str(payments))
+
     except Exception as e:
-        logger.error(e)
+        logger.error(f"Got an unexpected error - {e}")
