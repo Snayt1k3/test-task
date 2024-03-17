@@ -29,7 +29,7 @@ async def echo_handler(message: types.Message) -> None:
         payments = await aggregate_payments(
                 dt_from, dt_upto, message_json["group_type"], all_salaries
             )
-        await message.answer(str(payments))
+        await message.answer(json.dumps(payments))
 
     except Exception as e:
         logger.error(f"Got an unexpected error - {e}")
