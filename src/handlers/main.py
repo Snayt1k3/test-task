@@ -6,7 +6,7 @@ from aiogram import Router, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
-from src.utils.salaries.payments import aggregate_payments
+from src.usecases.salaries.payments import aggregate_payments
 from src.database.repositories.salary import salary_db
 
 logger = logging.getLogger(__name__)
