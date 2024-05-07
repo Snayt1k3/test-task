@@ -30,4 +30,3 @@ class SalaryRepository(MongoRepository):
             return []
 
 
-salary_db = SalaryRepository()

@@ -1,13 +1,14 @@
+import json
 import logging
 from datetime import datetime
-import json
 
 from aiogram import Router, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
-from src.utils.salaries.payments import aggregate_payments
-from src.database.repositories.salary import salary_db
+
+from src.database.repositories.salary import SalaryRepository
+from src.usecases.salaries.payments import AggregatePayments
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +24,12 @@ async def command_start_handler(message: Message) -> None:
 async def echo_handler(message: types.Message) -> None:
     try:
         message_json = json.loads(message.text)
-        all_salaries = await salary_db.get_all_salaries("user_salaries")
         dt_from = datetime.fromisoformat(message_json["dt_from"])
         dt_upto = datetime.fromisoformat(message_json["dt_upto"])
-        payments = await aggregate_payments(
-                dt_from, dt_upto, message_json["group_type"], all_salaries
-            )
+        command = AggregatePayments(SalaryRepository())
+        payments = await command.execute(
+            dt_from, dt_upto, message_json["group_type"]
+        )
         await message.answer(json.dumps(payments))
 
     except Exception as e:
