@@ -1,19 +1,21 @@
 import datetime
 
 import pandas as pd
+
 from src.database.repositories.base import BaseRepository
+
 
 class AggregatePayments:
     def __init__(self, repository: BaseRepository):
         self.repository = repository
 
     async def execute(
-        self,
-        dt_from: datetime.datetime,
-        dt_upto: datetime.datetime,
-        group_type: str,
+            self,
+            dt_from: datetime.datetime,
+            dt_upto: datetime.datetime,
+            group_type: str,
     ):
-        payments_data  = await self.repository.get_all_salaries("user_salaries")
+        payments_data = await self.repository.get_all_salaries("user_salaries")
         aggregated_payments = {}
 
         if group_type == "hour":
